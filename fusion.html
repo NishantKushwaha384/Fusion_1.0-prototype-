@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fusion 1.0</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --border: #2a2a3a;
+    --accent: #7c6dfa;
+    --accent2: #fa6d6d;
+    --accent3: #6dfabc;
+    --text: #e8e8f0;
+    --muted: #6a6a80;
+    --model-a: #7c6dfa;
+    --model-b: #fa6d6d;
+    --model-c: #6dfabc;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,109,250,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,109,250,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -1px;
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo-name {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  .header-badge {
+    margin-left: auto;
+    background: rgba(124,109,250,0.1);
+    border: 1px solid rgba(124,109,250,0.3);
+    color: var(--accent);
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Status bar */
+  .status-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+
+  .status-pill.active {
+    border-color: rgba(109,250,188,0.4);
+    color: var(--accent3);
+    background: rgba(109,250,188,0.05);
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    transition: all 0.3s;
+  }
+
+  .status-pill.active .status-dot {
+    background: var(--accent3);
+    box-shadow: 0 0 6px var(--accent3);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* Input area */
+  .input-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 24px;
+    transition: border-color 0.3s;
+  }
+
+  .input-section:focus-within {
+    border-color: rgba(124,109,250,0.5);
+  }
+
+  .input-label {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    resize: none;
+    line-height: 1.6;
+    min-height: 80px;
+  }
+
+  textarea::placeholder {
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  .input-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .char-count {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+  }
+
+  .ask-btn {
+    background: linear-gradient(135deg, var(--accent), #9b6dfa);
+    border: none;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.3px;
+  }
+
+  .ask-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(124,109,250,0.4);
+  }
+
+  .ask-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Pipeline visualization */
+  .pipeline {
+    display: none;
+    margin-bottom: 24px;
+  }
+
+  .pipeline.visible { display: block; }
+
+  .pipeline-title {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+
+  .pipeline-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .pipeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .step-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    transition: all 0.4s;
+    white-space: nowrap;
+  }
+
+  .step-box.done {
+    border-color: rgba(109,250,188,0.4);
+    color: var(--accent3);
+    background: rgba(109,250,188,0.05);
+  }
+
+  .step-box.active {
+    border-color: rgba(124,109,250,0.6);
+    color: var(--accent);
+    background: rgba(124,109,250,0.1);
+    box-shadow: 0 0 12px rgba(124,109,250,0.2);
+    animation: stepGlow 1s ease-in-out infinite alternate;
+  }
+
+  @keyframes stepGlow {
+    from { box-shadow: 0 0 8px rgba(124,109,250,0.2); }
+    to   { box-shadow: 0 0 16px rgba(124,109,250,0.4); }
+  }
+
+  .step-arrow {
+    color: var(--border);
+    font-size: 16px;
+    padding: 0 6px;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 10px;
+  }
+
+  /* Classification result */
+  .classify-result {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+  }
+
+  .classify-result.visible { display: block; }
+
+  .classify-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .classify-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .classify-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .classify-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .classify-value.complexity-low { color: var(--accent3); }
+  .classify-value.complexity-medium { color: #fabc6d; }
+  .classify-value.complexity-high { color: var(--accent2); }
+
+  /* Models panel */
+  .models-panel {
+    display: none;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .models-panel.visible { display: grid; }
+
+  .model-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.3s;
+  }
+
+  .model-card.loading {
+    border-color: rgba(124,109,250,0.3);
+  }
+
+  .model-card.done {
+    border-color: rgba(109,250,188,0.3);
+  }
+
+  .model-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .model-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .model-card.loading .model-dot {
+    background: var(--accent);
+    animation: pulse 1s infinite;
+  }
+
+  .model-card.done .model-dot {
+    background: var(--accent3);
+  }
+
+  .model-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .model-badge {
+    margin-left: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(124,109,250,0.1);
+    color: var(--accent);
+    border: 1px solid rgba(124,109,250,0.2);
+  }
+
+  .model-answer {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-height: 120px;
+    overflow-y: auto;
+    transition: color 0.3s;
+  }
+
+  .model-card.done .model-answer {
+    color: var(--text);
+    opacity: 0.8;
+  }
+
+  .model-loading-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .model-confidence {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .conf-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .conf-fill {
+    height: 100%;
+    background: var(--accent3);
+    border-radius: 2px;
+    transition: width 0.8s ease;
+    width: 0%;
+  }
+
+  /* Fusion output */
+  .fusion-output {
+    display: none;
+    background: var(--surface);
+    border: 1px solid rgba(124,109,250,0.3);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .fusion-output.visible { display: block; }
+
+  .fusion-header {
+    background: linear-gradient(135deg, rgba(124,109,250,0.15), rgba(250,109,109,0.08));
+    border-bottom: 1px solid rgba(124,109,250,0.2);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .fusion-icon {
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .fusion-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .fusion-meta {
+    margin-left: auto;
+    display: flex;
+    gap: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .fusion-meta span {
+    color: var(--accent3);
+  }
+
+  .fusion-body {
+    padding: 20px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: none;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .stats-row.visible { display: grid; }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+
+  /* History */
+  .history-section {
+    margin-top: 32px;
+  }
+
+  .history-title {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .history-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .history-item:hover {
+    border-color: rgba(124,109,250,0.3);
+    background: var(--surface2);
+  }
+
+  .history-q {
+    font-size: 13px;
+    color: var(--text);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .history-cat {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(124,109,250,0.1);
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* Fade in animation */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in { animation: fadeUp 0.4s ease forwards; }
+
+  .error-msg {
+    background: rgba(250,109,109,0.08);
+    border: 1px solid rgba(250,109,109,0.3);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--accent2);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .error-msg.visible { display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">F1</div>
+      <div class="logo-text">
+        <div class="logo-name">Fusion 1.0</div>
+        <div class="logo-sub">META-MODEL · FREE AI</div>
+      </div>
+    </div>
+    <div class="header-badge">PROTOTYPE</div>
+  </div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <div class="status-pill active" id="pill-classifier">
+      <div class="status-dot"></div>
+      CLASSIFIER
+    </div>
+    <div class="status-pill active" id="pill-router">
+      <div class="status-dot"></div>
+      ROUTER
+    </div>
+    <div class="status-pill active" id="pill-fusion">
+      <div class="status-dot"></div>
+      FUSION ENGINE
+    </div>
+    <div class="status-pill active" id="pill-models">
+      <div class="status-dot"></div>
+      3 MODELS READY
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="input-section">
+    <div class="input-label">YOUR QUESTION</div>
+    <textarea id="question-input" placeholder="Ask anything — math, coding, science, creative writing, reasoning..." rows="3"></textarea>
+    <div class="input-footer">
+      <div class="char-count" id="char-count">0 characters</div>
+      <button class="ask-btn" id="ask-btn" onclick="runFusion()">
+        ⚡ Run Fusion
+      </button>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="error-msg" id="error-msg"></div>
+
+  <!-- Pipeline -->
+  <div class="pipeline" id="pipeline">
+    <div class="pipeline-title">PIPELINE STATUS</div>
+    <div class="pipeline-steps">
+      <div class="pipeline-step">
+        <div class="step-box" id="step-classify">01 · CLASSIFY</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="step-box" id="step-route">02 · ROUTE</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="step-box" id="step-dispatch">03 · DISPATCH</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="step-box" id="step-fuse">04 · FUSE</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="step-box" id="step-polish">05 · POLISH</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Classification result -->
+  <div class="classify-result" id="classify-result">
+    <div class="classify-row">
+      <div class="classify-item">
+        <div class="classify-label">CATEGORY</div>
+        <div class="classify-value" id="res-category">—</div>
+      </div>
+      <div class="classify-item">
+        <div class="classify-label">COMPLEXITY</div>
+        <div class="classify-value" id="res-complexity">—</div>
+      </div>
+      <div class="classify-item">
+        <div class="classify-label">STRATEGY</div>
+        <div class="classify-value" id="res-strategy">—</div>
+      </div>
+      <div class="classify-item">
+        <div class="classify-label">MODELS</div>
+        <div class="classify-value" id="res-models">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Models panel -->
+  <div class="models-panel" id="models-panel">
+    <div class="model-card" id="card-a">
+      <div class="model-header">
+        <div class="model-dot"></div>
+        <div class="model-name" id="name-a">MODEL A</div>
+        <div class="model-badge">ROLE A</div>
+      </div>
+      <div class="model-answer" id="answer-a">
+        <span class="model-loading-text">waiting...</span>
+      </div>
+      <div class="model-confidence">
+        <span id="conf-a">—</span>
+        <div class="conf-bar"><div class="conf-fill" id="conf-bar-a"></div></div>
+      </div>
+    </div>
+
+    <div class="model-card" id="card-b">
+      <div class="model-header">
+        <div class="model-dot"></div>
+        <div class="model-name" id="name-b">MODEL B</div>
+        <div class="model-badge">ROLE B</div>
+      </div>
+      <div class="model-answer" id="answer-b">
+        <span class="model-loading-text">waiting...</span>
+      </div>
+      <div class="model-confidence">
+        <span id="conf-b">—</span>
+        <div class="conf-bar"><div class="conf-fill" id="conf-bar-b"></div></div>
+      </div>
+    </div>
+
+    <div class="model-card" id="card-c">
+      <div class="model-header">
+        <div class="model-dot"></div>
+        <div class="model-name" id="name-c">MODEL C</div>
+        <div class="model-badge">ROLE C</div>
+      </div>
+      <div class="model-answer" id="answer-c">
+        <span class="model-loading-text">waiting...</span>
+      </div>
+      <div class="model-confidence">
+        <span id="conf-c">—</span>
+        <div class="conf-bar"><div class="conf-fill" id="conf-bar-c"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fusion output -->
+  <div class="fusion-output" id="fusion-output">
+    <div class="fusion-header">
+      <div class="fusion-icon">⚡</div>
+      <div class="fusion-title">Fusion 1.0 — Final Answer</div>
+      <div class="fusion-meta">
+        <div>time: <span id="meta-time">—</span>s</div>
+        <div>tokens: <span id="meta-tokens">—</span></div>
+      </div>
+    </div>
+    <div class="fusion-body" id="fusion-body">—</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row" id="stats-row">
+    <div class="stat-card">
+      <div class="stat-value" id="stat-quality">—</div>
+      <div class="stat-label">FUSION QUALITY</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-models-used">—</div>
+      <div class="stat-label">MODELS USED</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-category">—</div>
+      <div class="stat-label">QUESTION TYPE</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-cost">~₹0</div>
+      <div class="stat-label">COST</div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="history-section" id="history-section" style="display:none">
+    <div class="history-title">QUERY HISTORY</div>
+    <div id="history-list"></div>
+  </div>
+
+</div>
+
+<script>
+  // ============================================================
+  // FUSION 1.0 — FRONTEND JAVASCRIPT
+  // ============================================================
+  // This file talks to YOUR Python backend (main.py).
+  // It no longer calls Anthropic directly.
+  //
+  // Flow:
+  //   User types question
+  //       ↓
+  //   fetch('http://localhost:8000/ask')   ← calls YOUR backend
+  //       ↓
+  //   Python runs: classify → dispatch → fuse → log
+  //       ↓
+  //   Backend returns FusionResponse JSON
+  //       ↓
+  //   We display results in the UI
+  //
+  // To run:
+  //   1. Start backend: python main.py
+  //   2. Open this HTML file in browser
+  //   That's it. No other setup needed.
+  // ============================================================
+
+  // ── BACKEND URL ─────────────────────────────────────────────
+  // This points to your running Python FastAPI server.
+  // Change this if you deploy the backend to a server later.
+  const BACKEND_URL = "http://localhost:8000";
+
+  // ── STATE ───────────────────────────────────────────────────
+  let queryHistory = [];   // Stores recent queries for history panel
+  let startTime   = null;  // Used to calculate elapsed time in UI
+
+  // ── CHAR COUNT ──────────────────────────────────────────────
+  document.getElementById('question-input').addEventListener('input', function() {
+    document.getElementById('char-count').textContent = this.value.length + ' characters';
+  });
+
+  // ── UI HELPERS ──────────────────────────────────────────────
+
+  function setStep(stepId, state) {
+    // state = '' (idle) | 'active' (running) | 'done' (complete)
+    document.getElementById(stepId).className = 'step-box ' + state;
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = '⚠ ' + msg;
+    el.className = 'error-msg visible';
+  }
+
+  function hideError() {
+    document.getElementById('error-msg').className = 'error-msg';
+  }
+
+  function resetUI() {
+    // Reset all panels to hidden before a new query
+    document.getElementById('pipeline').className       = 'pipeline visible fade-in';
+    document.getElementById('classify-result').className = 'classify-result';
+    document.getElementById('models-panel').className   = 'models-panel';
+    document.getElementById('fusion-output').className  = 'fusion-output';
+    document.getElementById('stats-row').className      = 'stats-row';
+    ['step-classify','step-route','step-dispatch','step-fuse','step-polish']
+      .forEach(s => setStep(s, ''));
+  }
+
+  function showModelCards(modelsUsed) {
+    // Show the 3 model cards in loading state while backend works
+    const keys = ['a', 'b', 'c'];
+    document.getElementById('models-panel').className = 'models-panel visible fade-in';
+
+    keys.forEach((k, i) => {
+      const modelName = modelsUsed[i] || `Model ${i + 1}`;
+      document.getElementById('name-' + k).textContent    = modelName.toUpperCase();
+      document.getElementById('card-' + k).className      = 'model-card loading';
+      document.getElementById('answer-' + k).innerHTML    = '<span class="model-loading-text">thinking...</span>';
+      document.getElementById('conf-' + k).textContent    = '—';
+      document.getElementById('conf-bar-' + k).style.width = '0%';
+    });
+  }
+
+  function fillModelCards(individualAnswers, confidenceScores, modelsUsed) {
+    // Fill model cards with actual answers once backend responds
+    const keys = ['a', 'b', 'c'];
+
+    keys.forEach((k, i) => {
+      if (i >= individualAnswers.length) return; // fewer than 3 models used
+
+      const answer = individualAnswers[i] || '—';
+      const conf   = confidenceScores[i]  || 0;
+      const confPct = Math.round(conf * 100);
+
+      document.getElementById('card-' + k).className   = 'model-card done';
+      document.getElementById('answer-' + k).textContent =
+        answer.substring(0, 300) + (answer.length > 300 ? '...' : '');
+      document.getElementById('conf-' + k).textContent       = confPct + '%';
+      document.getElementById('conf-bar-' + k).style.width   = confPct + '%';
+    });
+  }
+
+  // ── HEALTH CHECK ────────────────────────────────────────────
+  // Checks if backend is running when page loads.
+  // Updates the status pills in the header.
+  async function checkBackendHealth() {
+    try {
+      const res  = await fetch(`${BACKEND_URL}/health`);
+      const data = await res.json();
+
+      if (data.status === 'healthy') {
+        // All status pills go green
+        document.querySelectorAll('.status-pill').forEach(p => p.classList.add('active'));
+        document.getElementById('pill-models').querySelector('.status-dot').style.background = 'var(--accent3)';
+      }
+    } catch (e) {
+      // Backend not running — show all pills as inactive/red
+      document.querySelectorAll('.status-pill').forEach(p => p.classList.remove('active'));
+      showError('Backend not running. Start it with: python main.py');
+    }
+  }
+
+  // Run health check immediately when page loads
+  checkBackendHealth();
+
+  // ── MAIN FUNCTION ────────────────────────────────────────────
+  // This is called when user clicks "Run Fusion" button.
+  // It calls your Python backend and displays the results.
+
+  async function runFusion() {
+    const question = document.getElementById('question-input').value.trim();
+    if (!question) return;
+
+    hideError();
+    startTime = Date.now();
+
+    const btn = document.getElementById('ask-btn');
+    btn.disabled    = true;
+    btn.textContent = '⏳ Running...';
+
+    resetUI();
+
+    try {
+      // ── ANIMATE PIPELINE STEPS ──────────────────────────────
+      // We animate the steps while waiting for backend response.
+      // The backend does all steps internally in one call —
+      // we just simulate the visual progress for better UX.
+
+      setStep('step-classify', 'active');
+
+      // ── CALL YOUR PYTHON BACKEND ─────────────────────────────
+      // This single fetch replaces ALL the old Claude API calls.
+      // Your Python backend handles:
+      //   classify → route → dispatch → fuse → polish → log
+      // We just send the question and receive the full result.
+
+      const response = await fetch(`${BACKEND_URL}/ask`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question: question,
+          user_id: 'student'   // Optional — for tracking in logs
+        })
+      });
+
+      // Handle HTTP errors (4xx, 5xx)
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `Server error: ${response.status}`);
+      }
+
+      // Parse the JSON response from your FusionResponse model
+      // Shape: { final_answer, category, complexity, strategy,
+      //          models_used, individual_answers, confidence_scores,
+      //          fusion_weights, latency_seconds, cost_estimate }
+      const data = await response.json();
+
+      // ── UPDATE PIPELINE STEPS ────────────────────────────────
+      // Animate through steps to show the pipeline visually
+      setStep('step-classify', 'done');
+      setStep('step-route', 'active');
+      await new Promise(r => setTimeout(r, 200));
+      setStep('step-route', 'done');
+      setStep('step-dispatch', 'active');
+
+      // ── SHOW CLASSIFICATION RESULT ───────────────────────────
+      const cat        = data.category   || 'general';
+      const complexity = data.complexity || 'medium';
+
+      document.getElementById('res-category').textContent  = cat.toUpperCase();
+      document.getElementById('res-strategy').textContent  = data.strategy || '—';
+      document.getElementById('res-models').textContent    = (data.models_used || []).length + ' MODELS';
+
+      const compEl      = document.getElementById('res-complexity');
+      compEl.textContent = complexity.toUpperCase();
+      compEl.className   = 'classify-value complexity-' + complexity;
+
+      document.getElementById('classify-result').className = 'classify-result visible fade-in';
+
+      // ── SHOW MODEL CARDS ─────────────────────────────────────
+      // Show loading cards first, then fill with real data
+      showModelCards(data.models_used || []);
+      await new Promise(r => setTimeout(r, 300)); // brief pause for UX
+      fillModelCards(
+        data.individual_answers  || [],
+        data.confidence_scores   || [],
+        data.models_used         || []
+      );
+
+      setStep('step-dispatch', 'done');
+      setStep('step-fuse', 'active');
+      await new Promise(r => setTimeout(r, 200));
+      setStep('step-fuse', 'done');
+      setStep('step-polish', 'active');
+      await new Promise(r => setTimeout(r, 200));
+      setStep('step-polish', 'done');
+
+      // ── SHOW FINAL FUSED ANSWER ──────────────────────────────
+      const elapsed   = data.latency_seconds || ((Date.now() - startTime) / 1000).toFixed(1);
+      const wordCount = (data.final_answer || '').split(' ').length;
+
+      document.getElementById('fusion-body').textContent     = data.final_answer || '—';
+      document.getElementById('meta-time').textContent       = elapsed;
+      document.getElementById('meta-tokens').textContent     = '~' + Math.round(wordCount * 1.3);
+      document.getElementById('fusion-output').className     = 'fusion-output visible fade-in';
+
+      // ── SHOW STATS ───────────────────────────────────────────
+      const avgConf = data.confidence_scores && data.confidence_scores.length
+        ? Math.round(data.confidence_scores.reduce((a, b) => a + b, 0) / data.confidence_scores.length * 100)
+        : 0;
+
+      document.getElementById('stat-quality').textContent    = avgConf + '%';
+      document.getElementById('stat-models-used').textContent = (data.models_used || []).length;
+      document.getElementById('stat-category').textContent   = cat.toUpperCase();
+      document.getElementById('stat-cost').textContent       = data.cost_estimate || '~₹0';
+      document.getElementById('stats-row').className         = 'stats-row visible fade-in';
+
+      // ── ADD TO HISTORY ───────────────────────────────────────
+      queryHistory.unshift({ question, category: cat, answer: data.final_answer });
+      if (queryHistory.length > 5) queryHistory.pop();
+      renderHistory();
+
+    } catch (err) {
+      // Show user-friendly error
+      // Common errors:
+      //   "Failed to fetch" → backend not running → python main.py
+      //   "Server error: 500" → check terminal for Python error
+      //   "Server error: 422" → question validation failed
+      const msg = err.message.includes('fetch')
+        ? 'Cannot connect to backend. Is python main.py running?'
+        : err.message;
+
+      showError(msg);
+      ['step-classify','step-route','step-dispatch','step-fuse','step-polish']
+        .forEach(s => setStep(s, ''));
+    }
+
+    btn.disabled   = false;
+    btn.innerHTML  = '⚡ Run Fusion';
+  }
+
+  // ── HISTORY PANEL ────────────────────────────────────────────
+
+  function renderHistory() {
+    const section = document.getElementById('history-section');
+    const list    = document.getElementById('history-list');
+
+    if (queryHistory.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'block';
+    list.innerHTML = queryHistory.map((h, i) => `
+      <div class="history-item" onclick="loadHistory(${i})">
+        <div class="history-q">${h.question}</div>
+        <div class="history-cat">${h.category}</div>
+      </div>
+    `).join('');
+  }
+
+  function loadHistory(i) {
+    // Clicking a history item loads that question back into the input
+    document.getElementById('question-input').value = queryHistory[i].question;
+    document.getElementById('char-count').textContent = queryHistory[i].question.length + ' characters';
+  }
+
+  // ── KEYBOARD SHORTCUT ────────────────────────────────────────
+  // Ctrl + Enter submits the question (no need to click button)
+  document.getElementById('question-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && e.ctrlKey) runFusion();
+  });
+</script>
+</body>
+</html>
