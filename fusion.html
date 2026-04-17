@@ -938,7 +938,11 @@
   // Updates the status pills in the header.
   async function checkBackendHealth() {
     try {
-     const res = await fetch(`${BACKEND_URL}/health`);
+      const res = await fetch(`${BACKEND_URL}/health`, {
+  headers: {
+    "ngrok-skip-browser-warning": "69420"
+  }
+});
       const data = await res.json();
 
       if (data.status === 'healthy') {
@@ -987,14 +991,17 @@
       //   classify → route → dispatch → fuse → polish → log
       // We just send the question and receive the full result.
 
-      const response = await fetch(`${BACKEND_URL}/ask`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question: question,
-          user_id: 'student'   // Optional — for tracking in logs
-        })
-      });
+     const response = await fetch(`${BACKEND_URL}/ask`, {
+  method: 'POST',
+  headers: { 
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': '69420' // <--- Add this line
+  },
+  body: JSON.stringify({
+    question: question,
+    user_id: 'student'
+  })
+});
 
       // Handle HTTP errors (4xx, 5xx)
       if (!response.ok) {
