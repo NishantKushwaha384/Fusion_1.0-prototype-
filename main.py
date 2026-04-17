@@ -41,8 +41,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://nishantkushwaha384.github.io",
-        "*"
+        "https://nishantkushwaha384.github.io"
     ],
     allow_credentials=True,
     allow_methods=["*"],
