@@ -52,7 +52,7 @@ def health_check():
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://nishantkushwaha384.github.io"
+        "https://nishantkushwaha384.github.io/Fusion_1.0-prototype-/fusion.html"
     ],
     allow_credentials=True,
     allow_methods=["*"],
