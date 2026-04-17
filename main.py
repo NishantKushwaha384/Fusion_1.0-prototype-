@@ -51,12 +51,10 @@ def health_check():
 # blocks the connection for security reasons.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://nishantkushwaha384.github.io/Fusion_1.0-prototype-/fusion.html"
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["ngrok-skip-browser-warning", "Content-Type", "Authorization"], # Explicitly add ngrok header
 )
 
 # ── SERVE FRONTEND ──────────────────────────────────────────
