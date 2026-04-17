@@ -938,7 +938,7 @@
   // Updates the status pills in the header.
   async function checkBackendHealth() {
     try {
-      const res  = await fetch(`${ https://daffodil-smite-frenzy.ngrok-free.dev}/health`);
+      const res  = await fetch(`${https://daffodil-smite-frenzy.ngrok-free.dev}/health`);
       const data = await res.json();
 
       if (data.status === 'healthy') {
