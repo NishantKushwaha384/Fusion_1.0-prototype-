@@ -40,7 +40,10 @@ app = FastAPI(
 # blocks the connection for security reasons.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],       # In production, restrict this to your domain
+    allow_origins=[
+        "https://nishantkushwaha384.github.io",
+        "*"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
