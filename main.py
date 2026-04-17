@@ -32,7 +32,18 @@ app = FastAPI(
     description="Adaptive multi-model AI meta-system",
     version="1.0.0"
 )
-
+@app.get("/health")
+def health_check():
+    """
+    Health check endpoint.
+    Used to verify the server is running before sending real requests.
+    Frontend calls this on startup.
+    """
+    return {
+        "status": "healthy",
+        "models_available": ["groq-llama3", "gemini-flash", "gpt4o-mini"],
+        "version": "1.0.0"
+    }
 # ── CORS MIDDLEWARE ─────────────────────────────────────────
 # CORS = Cross-Origin Resource Sharing
 # This allows your HTML frontend (running on a different port)
@@ -96,18 +107,7 @@ def home():
     }
 
 
-@app.get("/health")
-def health_check():
-    """
-    Health check endpoint.
-    Used to verify the server is running before sending real requests.
-    Frontend calls this on startup.
-    """
-    return {
-        "status": "healthy",
-        "models_available": ["groq-llama3", "gemini-flash", "gpt4o-mini"],
-        "version": "1.0.0"
-    }
+
 
 
 @app.post("/ask", response_model=FusionResponse)
