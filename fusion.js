@@ -148,7 +148,12 @@ function fillModelCards(individualAnswers, confidenceScores, modelsUsed) {
 // Updates the status pills in the header.
 async function checkBackendHealth() {
   try {
-    const res  = await fetch(`${BACKEND_URL}/health`);
+    const res = await fetch(`${BACKEND_URL}/health`, {
+    method: 'GET',
+    headers: {
+        'ngrok-skip-browser-warning': 'true'
+    }
+});
     const data = await res.json();
 
     if (data.status === 'healthy') {
