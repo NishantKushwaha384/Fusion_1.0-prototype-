@@ -64,7 +64,7 @@ function renderAnswer(el, text) {
 // ── BACKEND URL ─────────────────────────────────────────────
 // This points to your running Python FastAPI server.
 // Change this if you deploy the backend to a server later.
-const BACKEND_URL = "http://localhost:8000";
+const BACKEND_URL = "https://daffodil-smite-frenzy.ngrok-free.dev";
 
 // ── STATE ───────────────────────────────────────────────────
 let queryHistory = [];   // Stores recent queries for history panel
