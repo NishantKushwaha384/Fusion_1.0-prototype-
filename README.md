@@ -20,8 +20,4 @@ fusion1/
 └── README.md        ← This file
 ```
 
-
-
-*.pyc
-.DS_Store
-```
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/NishantKushwaha384/Fusion_1.0-prototype-?utm_source=oss&utm_medium=github&utm_campaign=NishantKushwaha384%2FFusion_1.0-prototype-&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
